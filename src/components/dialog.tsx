@@ -21,60 +21,74 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          adding_todo,
+          todo: adding_todo,
         }),
       });
-
-      if (response.ok) {
-        const addedTodo = await response.json();
-        console.log("Todo added successfully:", addedTodo);
-      } else {
-        console.error("Error adding todo:", response.statusText);
-      }
+      console.log(response.json());
+      console.log("Todo added successfully");
     } catch (error) {
-      console.error("Error submitting todo:", error);
+      console.log("an error");
     }
+
+    onClose();
 
     setName("");
     setImportance(0);
-    onClose();
   };
   return (
-    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl  bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="bg-gray-900 rounded-lg p-4 shadow-md">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">
-            Name:
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </label>
-          <br />
-          <label htmlFor="importance">
-            Importance:
-            <input
-              type="number"
-              id="importance"
-              value={importance}
-              min="0"
-              max="10"
-              onChange={(e) => setImportance(parseInt(e.target.value, 10))}
-            />
-          </label>
-          <br />
-          <button type="submit">Add Todo</button>
-        </form>
+    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex flex-col">
+        <form onSubmit={(e) => handleSubmit(e)}>
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center justify-between min-w-max gap-5 ">
+              <label className="w-1/4 text-right text-gray-300 font-medium">
+                Name:
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="w-full px-3 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white  bg-opacity-20 hover:rounded-md focus:rounded-md"
+              />
+            </div>
 
-        <button
-          onClick={(e) => onClose()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-700"
-        >
-          Close
-        </button>
+            <div className="flex items-center justify-between min-w-max gap-5">
+              <label className="w-1/4 text-right text-gray-300 font-medium">
+                Importance:
+              </label>
+              <input
+                type="number"
+                id="importance"
+                name="importance"
+                value={importance}
+                min="0"
+                max="10"
+                onChange={(e) => setImportance(parseInt(e.target.value, 10))}
+                className="w-full px-3 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white  bg-opacity-20 Level hover:rounded-md focus:rounded-md"
+              />
+            </div>
+          </div>
+
+          <br />
+
+          <div className="flex flex-row justify-between">
+            <button
+              type="submit"
+              className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700"
+            >
+              Add Todo
+            </button>
+            <button
+              onClick={(e) => onClose()}
+              className="mt-4 bg-transparent border border-1 border-red-500  hover:bg-red-400 hover:bg-opacity-10 text-red-400 font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 "
+            >
+              Close
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -10,10 +10,6 @@ export default function Home() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpenPopup = () => {
-    setIsOpen(true);
-  };
-
   useEffect(() => {
     const fetchTodos = async () => {
       try {
@@ -27,10 +23,30 @@ export default function Home() {
     fetchTodos();
   }, []);
 
+  const updateDone = async (todo: todoType) => {
+    todo.completed = !todo.completed;
+    try {
+      const response = await fetch("/api/todo", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          todo: todo,
+        }),
+      });
+      console.log(response.json());
+      console.log("Todo added successfully");
+    } catch (error) {
+      console.log("an error");
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
-      <button onClick={e=>setIsOpen(!isOpen)} className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none">
+      <button
+        onClick={(e) => setIsOpen(!isOpen)}
+        className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none"
+      >
         ADD NEW
       </button>
       {isOpen && <TodoPopup todo={null} onClose={() => setIsOpen(false)} />}
@@ -49,6 +65,9 @@ export default function Home() {
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium tracking-wider">
                 Last Update
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium tracking-wider">
+                IsDone
               </th>
             </tr>
           </thead>
@@ -69,6 +88,16 @@ export default function Home() {
                 </td>
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   {todo.updatedAt}
+                </td>
+                <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
+                  <button
+                    id="is-done-button"
+                    type="button"
+                    onClick={(e) => updateDone(todo)}
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
+                  >
+                    {todo.completed ? "DONE" : "NOT DONE YET"}
+                  </button>
                 </td>
               </tr>
             ))}
