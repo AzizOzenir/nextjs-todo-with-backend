@@ -36,11 +36,11 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
     setImportance(0);
   };
   return (
-    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex items-center justify-center">
-      <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex flex-col">
+    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex-wrap items-center justify-center">
+      <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex-wrap flex-col">
         <form onSubmit={(e) => handleSubmit(e)}>
-          <div className="flex flex-col space-y-4">
-            <div className="flex items-center justify-between min-w-max gap-5 ">
+          <div className="flex-wrap flex-col space-y-4">
+            <div className="flex-wrap items-center justify-between min-w-max gap-5 ">
               <label className="w-1/4 text-right text-gray-300 font-medium">
                 Name:
               </label>
@@ -55,7 +55,7 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
               />
             </div>
 
-            <div className="flex items-center justify-between min-w-max gap-5">
+            <div className="flex-wrap items-center justify-between min-w-max gap-5">
               <label className="w-1/4 text-right text-gray-300 font-medium">
                 Importance:
               </label>
@@ -74,7 +74,7 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
 
           <br />
 
-          <div className="flex flex-row justify-between">
+          <div className="flex-wrap flex-row justify-between">
             <button
               type="submit"
               className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700"

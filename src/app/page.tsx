@@ -41,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
+    <main className="flex-wrap min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
       <button
         onClick={(e) => setIsOpen(!isOpen)}
@@ -51,7 +51,7 @@ export default function Home() {
       </button>
       {isOpen && <TodoPopup todo={null} onClose={() => setIsOpen(false)} />}
       {todos.length !== 0 ? (
-        <table className="table shadow-xl rounded-lg overflow-hidden w-[1000px]">
+        <table className="table shadow-xl rounded-lg overflow-hidden min-w-[90rem]">
           <thead className="text-white bg-gradient-to-r from-purple-500 to-blue-500">
             <tr>
               <th className="px-6 py-3 text-left text-sm font-medium tracking-wider">
@@ -68,6 +68,9 @@ export default function Home() {
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium tracking-wider">
                 IsDone
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium tracking-wider">
+                Actions
               </th>
             </tr>
           </thead>
@@ -94,9 +97,23 @@ export default function Home() {
                     id="is-done-button"
                     type="button"
                     onClick={(e) => updateDone(todo)}
-                    className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex-wrap items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
                   >
-                    {todo.completed ? "DONE" : "NOT DONE YET"}
+                    {todo.completed ? "DONE" : "NOT DONE"}
+                  </button>
+                </td>
+                <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
+                  <button
+                    type="button"
+                    className="px-3 py-2 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-700 focus:outline-none"
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    className="px-3 py-2 rounded-md bg-red-500 text-white font-medium hover:bg-red-700 focus:outline-none"
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
