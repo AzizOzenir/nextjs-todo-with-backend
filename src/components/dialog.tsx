@@ -6,23 +6,38 @@ type TodoPopupProps = {
   onClose: () => void; // Callback for closing the popup
 };
 
-const TodoPopup = ({ todo, onClose }: TodoPopupProps) => {
+const TodoPopup = ({ onClose }: TodoPopupProps) => {
   const [name, setName] = useState("");
   const [importance, setImportance] = useState(0); // Default importance
 
-  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    const adding_todo = {
+      name: name,
+      importance: importance,
+    };
     try {
-      const res = await fetch("/api/todo",{method:"POST"});
-      
-      
-    } catch {
-      console.log("Failed to load todos.");
+      const response = await fetch("/api/todo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          adding_todo,
+        }),
+      });
+
+      if (response.ok) {
+        const addedTodo = await response.json();
+        console.log("Todo added successfully:", addedTodo);
+      } else {
+        console.error("Error adding todo:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error submitting todo:", error);
     }
-    //    onAddTodo(newTodo);
+
     setName("");
     setImportance(0);
+    onClose();
   };
   return (
     <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl  bg-opacity-50 z-50 flex items-center justify-center">

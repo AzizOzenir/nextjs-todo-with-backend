@@ -1,6 +1,6 @@
 import { todos } from "@/data/todos";
 import { todoType } from "@/types/data_types";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 var moment = require("moment"); // require
 
 export async function GET(request: Request, id: number) {
@@ -9,22 +9,23 @@ export async function GET(request: Request, id: number) {
     e.id === id ? e : null;
   });
 
-  return taken_todo[0];
+  return Response.json({ taken_todo: taken_todo[0] });
 }
 
-export async function POST(request: Request, todo: todoType) {
+export async function POST(request: Request, todo:{name:string,importance:number}) {
   const alltodos: todoType[] = todos;
 
   const adding_todo: todoType = {
-    id:Math.random(),
+    id: Number(uuidv4()),
     name: todo.name,
     importance: todo.importance || 5,
     completed: false,
     updatedAt: moment().format(),
     createdAt: moment().format(),
   };
-
-  return;
+  todos.push(adding_todo);
+  console.log(todos)
+  return Response.json({ adding_todo: adding_todo });
 }
 
 export async function UPDATE(request: Request, todo: todoType) {
