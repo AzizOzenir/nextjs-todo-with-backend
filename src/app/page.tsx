@@ -1,19 +1,19 @@
 "use client";
 import TodoPopup from "@/components/dialog";
 import ImportancyCircle from "@/components/importancy_circle";
+import { update } from "@/redux/diolog_updater/diaolog_updater_slice";
+import { RootState } from "@/redux/store";
 
 import { OpenState, todoType } from "@/types/data_types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
   const [todos, setTodos] = useState<todoType[]>([]);
 
-  const [isOpen, setIsOpen] = useState<OpenState>({
-    isOpen: false,
-    isAdd: false,
-    todo: null,
-  });
+  const diaologState = useSelector((state: RootState) => state.dialog);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -62,20 +62,21 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
+
       <button
-        onClick={(e) => setIsOpen({ isOpen: true, isAdd: true, todo: null })}
+        onClick={(e) =>
+          dispatch(update({ show: true, isAdd: true, todo: null }))
+        }
         className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none"
       >
         ADD NEW
       </button>
 
-      {isOpen.isOpen && (
+      {diaologState.show && (
         <TodoPopup
-          todo={isOpen.todo}
           onClose={() =>
-            setIsOpen({ isOpen: false, isAdd: isOpen.isAdd, todo: null })
+            dispatch(update({ show: true, isAdd: false, todo: null }))
           }
-          isAdd={isOpen.isAdd}
         />
       )}
       {todos.length !== 0 ? (
@@ -134,7 +135,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={(e) =>
-                      setIsOpen({ isOpen: true, isAdd: false, todo: todo })
+                      dispatch(update({ show: true, isAdd: false, todo: todo }))
                     }
                     className="px-3 py-2 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-700 focus:outline-none"
                   >
