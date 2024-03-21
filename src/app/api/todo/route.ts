@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   try {
     const newTodo = await prisma.todo.create({
       data: {
-        title: todo.name || "no name given",
+        title: todo.title || "no name given",
         importance: todo.importance || 5,
         completed: todo.completed || false,
       },

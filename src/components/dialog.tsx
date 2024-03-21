@@ -38,6 +38,7 @@ const TodoPopup = ({ todo, onClose, isAdd }: TodoPopupProps) => {
   const handleSubmitUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updating_todo = {
+      id:todo?.id,
       title: title,
       importance: importance,
       isDone:isDone
@@ -64,7 +65,7 @@ const TodoPopup = ({ todo, onClose, isAdd }: TodoPopupProps) => {
   return (
     <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex items-center justify-center">
       <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex flex-col">
-        <form onSubmit={(e) => handleSubmitAdd(e)}>
+        <form onSubmit={(e) => {isAdd?handleSubmitAdd(e):handleSubmitUpdate(e)}}>
           <div className="flex flex-col space-y-4">
             <div className="flex items-center justify-between min-w-max gap-5 ">
               <label className="w-1/4 text-right text-gray-300 font-medium">
@@ -102,10 +103,8 @@ const TodoPopup = ({ todo, onClose, isAdd }: TodoPopupProps) => {
               id="is-done-button"
               type="button"
               onClick={(e) => setisDone(isDone)}
-   
-              className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
-            >
-              {todo?.completed ? "DONE" : "NOT DONE"}
+              className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium">
+              {isDone ? "DONE" : "NOT DONE"}
             </button>
           ) : null}
           <br />
@@ -114,7 +113,7 @@ const TodoPopup = ({ todo, onClose, isAdd }: TodoPopupProps) => {
               type="submit"
               className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700"
             >
-              Add Todo
+           {isAdd?   "Add Todo":"Update Todo"}
             </button>
           </div>
         </form>

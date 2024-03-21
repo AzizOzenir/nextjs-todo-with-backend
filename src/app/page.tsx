@@ -63,7 +63,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
       <button
-        onClick={(e) => setIsOpen({ isOpen: !isOpen, isAdd: true, todo: null })}
+        onClick={(e) => setIsOpen({ isOpen: true, isAdd: true, todo: null })}
         className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none"
       >
         ADD NEW
