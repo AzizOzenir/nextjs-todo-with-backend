@@ -1,9 +1,15 @@
 export interface todoType {
   id: number;
-  name: string;
+  title: string;
   completed: boolean;
   importance: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
+
+export type OpenState = {
+  isOpen: boolean;
+  isAdd: boolean;
+  todo:todoType |null
+};

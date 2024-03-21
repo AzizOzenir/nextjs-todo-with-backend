@@ -1,19 +1,20 @@
 import { todoType } from "@/types/data_types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type TodoPopupProps = {
   todo: todoType | null;
   onClose: () => void; // Callback for closing the popup
+  isAdd: boolean;
 };
 
-const TodoPopup = ({ onClose }: TodoPopupProps) => {
-  const [name, setName] = useState("");
+const TodoPopup = ({ todo, onClose, isAdd }: TodoPopupProps) => {
+  const [title, setTitle] = useState("");
   const [importance, setImportance] = useState(0); // Default importance
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [isDone, setisDone] = useState(todo ? todo.completed : false);
+  const handleSubmitAdd = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const adding_todo = {
-      name: name,
+      title: title,
       importance: importance,
     };
     try {
@@ -24,38 +25,63 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
           todo: adding_todo,
         }),
       });
-      console.log(response.json());
-      console.log("Todo added successfully");
+      window.location.reload();
     } catch (error) {
-      console.log("an error");
     }
 
     onClose();
 
-    setName("");
+    setTitle("");
     setImportance(0);
   };
+
+  const handleSubmitUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const updating_todo = {
+      title: title,
+      importance: importance,
+      isDone:isDone
+    };
+    try {
+      const response = await fetch("/api/todo", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          todo: updating_todo,
+        }),
+      });
+      window.location.reload();
+    } catch (error) {
+    }
+
+    onClose();
+
+    setTitle("");
+    setImportance(0);
+  };
+
+
   return (
-    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex-wrap items-center justify-center">
-      <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex-wrap flex-col">
-        <form onSubmit={(e) => handleSubmit(e)}>
-          <div className="flex-wrap flex-col space-y-4">
-            <div className="flex-wrap items-center justify-between min-w-max gap-5 ">
+    <div className="fixed inset-0 bg-gray-900 backdrop-blur-xl bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="w-full max-w-md bg-gray-900 rounded-lg p-8 shadow-md flex flex-col">
+        <form onSubmit={(e) => handleSubmitAdd(e)}>
+          <div className="flex flex-col space-y-4">
+            <div className="flex items-center justify-between min-w-max gap-5 ">
               <label className="w-1/4 text-right text-gray-300 font-medium">
-                Name:
+                Title:
               </label>
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                id="title"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
                 className="w-full px-3 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white  bg-opacity-20 hover:rounded-md focus:rounded-md"
               />
             </div>
 
-            <div className="flex-wrap items-center justify-between min-w-max gap-5">
+            <div className="flex items-center justify-between min-w-max gap-5">
               <label className="w-1/4 text-right text-gray-300 font-medium">
                 Importance:
               </label>
@@ -71,24 +97,33 @@ const TodoPopup = ({ onClose }: TodoPopupProps) => {
               />
             </div>
           </div>
-
+          {!isAdd ? (
+            <button
+              id="is-done-button"
+              type="button"
+              onClick={(e) => setisDone(isDone)}
+   
+              className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
+            >
+              {todo?.completed ? "DONE" : "NOT DONE"}
+            </button>
+          ) : null}
           <br />
-
-          <div className="flex-wrap flex-row justify-between">
+          <div className="flex flex-row justify-between">
             <button
               type="submit"
               className="mt-4 bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700"
             >
               Add Todo
             </button>
-            <button
-              onClick={(e) => onClose()}
-              className="mt-4 bg-transparent border border-1 border-red-500  hover:bg-red-400 hover:bg-opacity-10 text-red-400 font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 "
-            >
-              Close
-            </button>
           </div>
         </form>
+        <button
+          onClick={(e) => onClose()}
+          className="mt-4 bg-transparent border border-1 border-red-500  hover:bg-red-400 hover:bg-opacity-10 text-red-400 font-bold py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 "
+        >
+          Close
+        </button>
       </div>
     </div>
   );

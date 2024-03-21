@@ -1,25 +1,28 @@
 "use client";
 import TodoPopup from "@/components/dialog";
 import ImportancyCircle from "@/components/importancy_circle";
-import { todoType } from "@/types/data_types";
+
+import { OpenState, todoType } from "@/types/data_types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [todos, setTodos] = useState<todoType[]>([]);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<OpenState>({
+    isOpen: false,
+    isAdd: false,
+    todo: null,
+  });
 
   useEffect(() => {
     const fetchTodos = async () => {
-      try {
-        const res = await fetch("/api/todos");
-        const data = await res.json();
-        setTodos(data.alltodos);
-      } catch {
-        console.log("Failed to load todos.");
-      }
+      const response = await fetch("/api/todos"); // Replace with your API route
+      const data = await response.json();
+      setTodos(data.todos);
+      console.log(data.todos);
     };
+
     fetchTodos();
   }, []);
 
@@ -33,23 +36,48 @@ export default function Home() {
           todo: todo,
         }),
       });
+      window.location.reload();
+    } catch (error) {
+      console.log("an error");
+    }
+  };
+
+  const handleDelete = async (todo: todoType) => {
+    try {
+      const response = await fetch("/api/todo", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: todo.id,
+        }),
+      });
       console.log(response.json());
-      console.log("Todo added successfully");
+      window.location.reload();
+      console.log("Todo deleted successfully");
     } catch (error) {
       console.log("an error");
     }
   };
 
   return (
-    <main className="flex-wrap min-h-screen flex-col items-center justify-center gap-40 p-24">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
       <button
-        onClick={(e) => setIsOpen(!isOpen)}
+        onClick={(e) => setIsOpen({ isOpen: !isOpen, isAdd: true, todo: null })}
         className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none"
       >
         ADD NEW
       </button>
-      {isOpen && <TodoPopup todo={null} onClose={() => setIsOpen(false)} />}
+
+      {isOpen.isOpen && (
+        <TodoPopup
+          todo={isOpen.todo}
+          onClose={() =>
+            setIsOpen({ isOpen: false, isAdd: isOpen.isAdd, todo: null })
+          }
+          isAdd={isOpen.isAdd}
+        />
+      )}
       {todos.length !== 0 ? (
         <table className="table shadow-xl rounded-lg overflow-hidden min-w-[90rem]">
           <thead className="text-white bg-gradient-to-r from-purple-500 to-blue-500">
@@ -84,20 +112,20 @@ export default function Home() {
                   {todo.id}
                 </td>
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
-                  {todo.name}
+                  {todo.title}
                 </td>
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   <ImportancyCircle number={todo.importance} />{" "}
                 </td>
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
-                  {todo.updatedAt}
+                  {todo.updatedAt.toString()}
                 </td>
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   <button
                     id="is-done-button"
                     type="button"
                     onClick={(e) => updateDone(todo)}
-                    className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex-wrap items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
+                    className="bg-gradient-to-r from-purple-500 to-blue-500 is-done flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium"
                   >
                     {todo.completed ? "DONE" : "NOT DONE"}
                   </button>
@@ -105,12 +133,16 @@ export default function Home() {
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   <button
                     type="button"
+                    onClick={(e) =>
+                      setIsOpen({ isOpen: true, isAdd: false, todo: todo })
+                    }
                     className="px-3 py-2 rounded-md bg-blue-500 text-white font-medium hover:bg-blue-700 focus:outline-none"
                   >
                     Update
                   </button>
                   <button
                     type="button"
+                    onClick={(e) => handleDelete(todo)}
                     className="px-3 py-2 rounded-md bg-red-500 text-white font-medium hover:bg-red-700 focus:outline-none"
                   >
                     Delete

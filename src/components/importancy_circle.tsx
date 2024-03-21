@@ -6,12 +6,16 @@ interface CircleProps {
 }
 
 const ImportancyCircle: React.FC<CircleProps> = ({ number }) => {
-  
   return (
     <div
-      className={`  flex justify-center items-center rounded-full h-12 w-12 p-5`}
-    style={{background:`${getDangerColor(number)}`}}>
-      <div className={`  text-white text-lg font-bold`}>{number}</div>
+      className={`  flex  w-min  justify-center items-center rounded-full  p-5`}
+    >
+      <div
+        className={`  text-lg font-bold`}
+        style={{ color: `${getDangerColor(number)}` }}
+      >
+        {number}
+      </div>
     </div>
   );
 };
