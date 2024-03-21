@@ -5,6 +5,7 @@ import "./globals.css";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
 import ProviderWrapper from "@/redux/providerWrapper";
+import { useSession } from "next-auth/react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,10 +18,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { data: session } = useSession();
   return (
     <html lang="en">
       <body className={inter.className}>
-      <ProviderWrapper>  {children}</ProviderWrapper>
+      <ProviderWrapper >  {children}</ProviderWrapper>
 
       </body>
     </html>
