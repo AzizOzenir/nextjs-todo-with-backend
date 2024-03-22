@@ -10,10 +10,10 @@ type Props = {
   
 };
 const ProviderWrapper = ({ children }: Props) => {
-  const { data: session } = useSession();
+
   return (
     <Provider store={store}>
-      <SessionProvider session={session}>{children}</SessionProvider>
+      {children}
     </Provider>
   );
 };

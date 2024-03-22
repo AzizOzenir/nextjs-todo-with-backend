@@ -34,6 +34,9 @@ dependencies:
     version: 9.0.1
 
 devDependencies:
+  '@types/babel__preset-env':
+    specifier: ^7.9.6
+    version: 7.9.6
   '@types/node':
     specifier: ^20.11.27
     version: 20.11.27
@@ -408,6 +411,10 @@ packages:
 
   /@tsconfig/node16@1.0.4:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+    dev: true
+
+  /@types/babel__preset-env@7.9.6:
+    resolution: {integrity: sha512-PaOA2V4J3CZZopQaTGT1e8WEWCqHWc1k12zLlci4T9eR2lQIlA/GbnVbloFDqYVFr1BNiCXnotH32Up8WdgTxQ==}
     dev: true
 
   /@types/json5@0.0.29:

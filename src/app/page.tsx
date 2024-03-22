@@ -79,6 +79,7 @@ export default function Home() {
           }
         />
       )}
+      
       {todos.length !== 0 ? (
         <table className="table shadow-xl rounded-lg overflow-hidden min-w-[90rem]">
           <thead className="text-white bg-gradient-to-r from-purple-500 to-blue-500">
