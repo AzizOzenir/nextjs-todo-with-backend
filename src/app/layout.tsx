@@ -1,12 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
 import ProviderWrapper from "@/redux/provider_wrapper";
-import SessionWrapper from "./api/auth/session_wrapper";
-import { useSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
+import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,13 +16,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <ProviderWrapper>
-    
-          <SessionWrapper session={null} > {children}</SessionWrapper>
+          {" "}
+          <Header />
+          {children}
         </ProviderWrapper>
       </body>
     </html>

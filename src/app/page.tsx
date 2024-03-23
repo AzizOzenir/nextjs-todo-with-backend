@@ -3,7 +3,7 @@ import TodoPopup from "@/components/dialog";
 import ImportancyCircle from "@/components/importancy_circle";
 import { update } from "@/redux/diolog_updater/diaolog_updater_slice";
 import { RootState } from "@/redux/store";
-
+import { useSession } from 'next-auth/react';
 import { OpenState, todoType } from "@/types/data_types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -59,6 +59,7 @@ export default function Home() {
     }
   };
 
+  const { data: session, status } = useSession()
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-40 p-24">
       <style jsx>{``}</style>
@@ -69,13 +70,13 @@ export default function Home() {
         }
         className="text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br rounded-lg shadow-md py-2 px-4 font-medium focus:outline-none"
       >
-        ADD NEW
+        ADD NEW {session?.user?.email!}
       </button>
 
       {diaologState.show && (
         <TodoPopup
           onClose={() =>
-            dispatch(update({ show: true, isAdd: false, todo: null }))
+            dispatch(update({ show: false, isAdd: false, todo: null }))
           }
         />
       )}
@@ -119,6 +120,8 @@ export default function Home() {
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   <ImportancyCircle number={todo.importance} />{" "}
                 </td>
+
+
                 <td className="px-6 py-4 text-left text-sm leading-5 font-medium">
                   {todo.updatedAt.toString()}
                 </td>

@@ -1,20 +1,31 @@
-"use client"
-import { useSession, signIn, signOut } from "next-auth/react"
+ 
+import options, { authOptions } from '@/app/api/auth/[...nextauth]/options';
+import { getServerSession } from 'next-auth';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
-export default function Header() {
-  const { data: session } = useSession()
+
+
+export default async function Header() {
+  /* const { data: session, status } = useSession({
+    required: false,
+    onUnauthenticated() {
+      // The user is not authenticated, handle it here.
+    },
+  }); */
+  const session = await getServerSession(authOptions)
   if (session) {
     return (
       <>
-        Signed in as {session.user?.email} <br />
-        <button onClick={() => signOut()}>Sign out </button>
+        Signed in as {session.user.name} <br />
+        <Link href="/api/auth/signout?callbackUrl=/">Log out</Link>
       </>
-    )
+    );
   }
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <Link href="/api/auth/signin">Log in</Link>
     </>
-  )
+  );
 }
